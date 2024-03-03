@@ -3,7 +3,28 @@ import { ref } from 'vue';
 const props = defineProps({
   name: String
 })
-console.log(props)
+var d = new Date(1382086394000);
+console.log(d.getDate(),".",d.getMonth()+1,".",d.getFullYear(),"time",d.getHours(),":",d.getMinutes())
+const matchList =  [ 
+      { 
+         matchDate: 1651744228685, 
+         stadium: "Maracanã", 
+         homeTeam: "Brazil", 
+         awayTeam: "Argentina", 
+         matchPlayed: true, 
+         homeTeamScore: 0, 
+         awayTeamScore: 0 
+      }, 
+      {
+	      matchDate: 1651744228685, 
+         stadium: "Maracanã", 
+         homeTeam: "Brazil", 
+         awayTeam: "Argentina", 
+         matchPlayed: true, 
+         homeTeamScore: 0, 
+         awayTeamScore: 0 
+	} 
+   ] 
 
 const data = ref("Hello World1");
 const clickhandler = () =>{
@@ -13,26 +34,27 @@ data.value = "now clicked1";
 
 <template>
   <div class="container">
+    <div class="pageHeading">League Schedule</div>
     <div class="tableHeading">
-            <div class="headingItem">Date/Time</div>
+            <div class="headingItem firstItem">Date/Time</div>
             <div class="headingItem">Stadium</div>
-            <div class="headingItem">Home Team</div>
+            <div class="headingItem homeTeamHeading">Home Team</div>
             <div class="headingItem">Away Team</div>
     </div>
-    <div class="tableContent">
-      <div class="rowItem">5.5.2022</div>
-      <div class="rowItem">Marcana</div>
+    <div :class="(index %2) ? 'tableContent even' : 'tableContent'" v-for="(item, index) in matchList">
+      <div class="rowItem firstItem">{{ item.matchDate }}</div>
+      <div class="rowItem">{{ item.stadium }}</div>
       <div class="rowItem">
           <div class="homeTeam">
-            <div class="teamName">Brazil</div>
-            <img width="53px" height="37px" src="https://flagsapi.codeaid.io/Brazil.png"/>
-            <div class="score">1:0</div>
+            <div class="homeTeamName">{{ item.homeTeam }}</div>
+            <img width="53px" height="37px" :src="`https://flagsapi.codeaid.io/${item.homeTeam}.png`"/>
+            <div class="score">{{ item.homeTeamScore }}:{{ item.awayTeamScore }}</div>
           </div>
       </div>
       <div class="rowItem">
         <div class="awayTeam">
-            <img width="53px" height="37px" src="https://flagsapi.codeaid.io/Serbia.png"/>
-            <div class="teamName">Serbia</div>
+            <img width="53px" height="37px" :src="`https://flagsapi.codeaid.io/${item.awayTeam}.png`"/>
+            <div class="awayTeamName">{{ item.awayTeam }}</div>
           </div>
       </div>
     </div>
@@ -44,32 +66,59 @@ data.value = "now clicked1";
 .container{
   width: 90vw;
   padding: 0 5vw;
+  color: #4B5C68;
+}
+.pageHeading{
+  margin-top: 60px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 750;
+  color: #182C62;
+}
+.firstItem{
+  padding-left: 2vw;
 }
 .homeTeam{
   display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 700;
 }
 .awayTeam{
   display: flex;
-}
-.homeFlag{
-  background-image: url("https://flagsapi.codeaid.io/Brazil.png");
-  width: 53px;
-  height: 37px;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 700;
 }
 .tableHeading{
   display: flex;
   background-color: #E4EDF2;
   height: 40px;
   align-items: center;
+  font-size: 12px;
+  font-weight: 700;
 }
 .tableContent{
   display: flex;
   height: 70px;
+  align-items: center;
+  font-size: 14px;
 }
 .headingItem{
   flex: 1;
 }
 .rowItem{
   flex: 1;
+}
+.homeTeamHeading{
+  text-align: center;
+}
+.awayTeamName{
+  padding-left: 2vw;
+}
+.even{
+  background-color: #F6F7F7;
 }
 </style>
