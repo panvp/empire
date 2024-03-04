@@ -18,38 +18,67 @@ const matchList =  [
       {
 	      matchDate: 1651744228685, 
          stadium: "Maracanã", 
-         homeTeam: "Brazil", 
-         awayTeam: "Argentina", 
+         homeTeam: "Switzerland", 
+         awayTeam: "France", 
          matchPlayed: true, 
          homeTeamScore: 0, 
          awayTeamScore: 0 
-	} 
+	},
+  {
+	      matchDate: 1651744228685, 
+         stadium: "Maracanã", 
+         homeTeam: "Democratic Republic Of Congo", 
+         awayTeam: "Guinea-bissau", 
+         matchPlayed: true, 
+         homeTeamScore: 12345, 
+         awayTeamScore: 0 
+	}  
    ] 
 
 const data = ref("Hello World1");
-const clickhandler = () =>{
-data.value = "now clicked1";
+const isTablet = ref(true);
+const isMobile = ref(true);
+window.onresize = function(){
+
+  if (window.matchMedia('screen and (min-width: 1000px)').matches) {
+    console.log("Tablet")
+    isTablet.value = true;
+  }
+  else
+  isTablet.value = false;
+
+  if (window.matchMedia('screen and (min-width: 750px)').matches) {
+    console.log("mobile")
+    isMobile.value = true;
+  }
+  else
+  isMobile.value = false;
+
 }
+console.log("Tablet",isTablet.value,"mobile",isMobile.value)
 </script>
 
 <template>
   <div class="container">
     <div class="pageHeading">League Schedule</div>
     <div class="tableHeading">
-            <div class="headingItem firstItem">Date/Time</div>
-            <div class="headingItem">Stadium</div>
+            <div v-if="isMobile" class="headingItem firstItem">Date/Time</div>
+            <div v-if="isTablet" class="headingItem">Stadium</div>
             <div class="headingItem homeTeamHeading">Home Team</div>
+            <div class="headingItem"></div>
             <div class="headingItem">Away Team</div>
     </div>
     <div :class="(index %2) ? 'tableContent even' : 'tableContent'" v-for="(item, index) in matchList">
-      <div class="rowItem firstItem">{{ item.matchDate }}</div>
-      <div class="rowItem">{{ item.stadium }}</div>
+      <div v-if="isMobile" class="rowItem firstItem">{{ item.matchDate }}</div>
+      <div v-if="isTablet" class="rowItem">{{ item.stadium }}</div>
       <div class="rowItem">
           <div class="homeTeam">
             <div class="homeTeamName">{{ item.homeTeam }}</div>
             <img width="53px" height="37px" :src="`https://flagsapi.codeaid.io/${item.homeTeam}.png`"/>
-            <div class="score">{{ item.homeTeamScore }}:{{ item.awayTeamScore }}</div>
           </div>
+      </div>
+      <div class="rowItem">
+        <div class="score">{{ item.homeTeamScore }}:{{ item.awayTeamScore }}</div>
       </div>
       <div class="rowItem">
         <div class="awayTeam">
@@ -81,8 +110,16 @@ data.value = "now clicked1";
 }
 .homeTeam{
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-end;
   align-items: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+.homeTeam > img{
+  margin-left: 2vw;
+}
+.score{
+  text-align: center;
   font-size: 16px;
   font-weight: 700;
 }
@@ -113,7 +150,7 @@ data.value = "now clicked1";
   flex: 1;
 }
 .homeTeamHeading{
-  text-align: center;
+  text-align: right;
 }
 .awayTeamName{
   padding-left: 2vw;
