@@ -48,7 +48,7 @@ console.log(store.matchList, "matchlist")
           </div>
       </div>
       <div class="rowItem">
-        <div class="score">{{ item.homeTeamScore }}:{{ item.awayTeamScore }}</div>
+        <div class="score">{{ (item.matchPlayed) ?  `${item.homeTeamScore} : ${item.awayTeamScore}` : '- : -'}}</div>
       </div>
       <div class="rowItem">
         <div class="awayTeam">

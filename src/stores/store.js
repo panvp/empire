@@ -2,7 +2,7 @@ import { reactive } from 'vue'
 
 export const store = reactive({
   matchList: [],
-  teamMap: {},
+  cumlativeTeamScoreMap: {},
   leaderBoardList: [],
   getInitialData(matchData){
    const modifiedData = matchData.map((data)=>{
@@ -18,16 +18,18 @@ export const store = reactive({
     }
   })
   this.matchList = modifiedData;
-  this.calculateLeaderBoard(matchData);
+  this.cumlativeTeamScoreMap = this.calculateCountryScoreMap(matchData);
+  this.calculateLeaderBoardList(this.cumlativeTeamScoreMap);
   },
-  calculateLeaderBoard(matchData){
+  // Returns an object with country as key and points calculated on the basis of matchData
+  calculateCountryScoreMap(matchData){
     const dataMap = {}
     matchData.forEach((data)=>{
-      const {homeTeam, awayTeam, matchPlayed, homeTeamScore, awayTeamScore} = data;
+      let {homeTeam, awayTeam, matchPlayed, homeTeamScore, awayTeamScore} = data;
       if(matchPlayed){
         // Home Team Score
         if(dataMap.hasOwnProperty(homeTeam)){
-          const {matchPlayed, goalsFor, goalsAgainst, goalsDifference, points} = dataMap[homeTeam];
+          let {matchPlayed, goalsFor, goalsAgainst, goalsDifference, points} = dataMap[homeTeam];
           matchPlayed++;
           goalsFor+= homeTeamScore;
           goalsAgainst+= awayTeamScore;
@@ -46,7 +48,7 @@ export const store = reactive({
         }
         // For Away team
         if(dataMap.hasOwnProperty(awayTeam)){
-          const {matchPlayed, goalsFor, goalsAgainst, goalsDifference, points} = dataMap[awayTeam];
+          let {matchPlayed, goalsFor, goalsAgainst, goalsDifference, points} = dataMap[awayTeam];
           matchPlayed++;
           goalsFor+= awayTeamScore;
           goalsAgainst+= homeTeamScore;
@@ -67,22 +69,73 @@ export const store = reactive({
 
     })
     console.log(dataMap,"map");
-    this.teamMap = dataMap;
-    this.calculateLeaderBoardList(dataMap);
+    return dataMap;
   },
+  // calculates the final leaderBoard List to be displayed
   calculateLeaderBoardList(dataMap){
     const leaderList = [];
-    Object.keys(dataMap).map((key)=>{
-      leaderList.push({country: key, ...dataMap[key]})
+    // Create a List on points [{country: "serbia", mp, gf, ga, gd, points]
+    Object.keys(dataMap).map((countryName)=>{
+      leaderList.push({country: countryName, ...dataMap[countryName]})
     })
-    leaderList.sort(customSort);
-    function customSort(team1, team2) {
-      if(team1.points > team2.points) return -1;
-      else{
-        return 1;
+
+    // Creating a score map to sort the teams having same points {1 : [..teams], 2: [...teams]}
+    const scoreMap = {};
+    leaderList.map((team)=>{
+      if(scoreMap.hasOwnProperty(team.points)){
+        scoreMap[team.points].push(team);
       }
+      else{
+        scoreMap[team.points] = [team];
+      }
+    })
+  
+    // Sorting the inner lists created in above map
+    Object.keys(scoreMap).map((points)=>{
+      if(scoreMap[points].length > 1){
+
+          const teamNameList = scoreMap[points].map(team => team.country);
+          const headToHeadMatches = this.matchList.filter((match) => 
+              match.matchPlayed && teamNameList.includes(match.homeTeam) && teamNameList.includes(match.awayTeam));
+            
+        // To calculate points for head to head matches
+          const miniScoreMap = this.calculateCountryScoreMap(headToHeadMatches);
+
+          // This list calculates for head to head matches only
+          const miniLeaderList = [];
+          Object.keys(miniScoreMap).map((countryName)=>{
+            miniLeaderList.push({country: countryName, ...miniScoreMap[countryName]})
+          })
+          miniLeaderList.sort(customSort);
+          function customSort(team1, team2){
+            if(team1.points != team2.points)
+                return team2.points - team1.points;
+            else if(dataMap[team1.country].goalsDifference != dataMap[team2.country].goalsDifference)
+                return dataMap[team2.country].goalsDifference - dataMap[team1.country].goalsDifference;
+            else if(dataMap[team1.country].homeTeamScore != dataMap[team2.country].homeTeamScore)
+              return dataMap[team2.country].homeTeamScore - dataMap[team1.country].homeTeamScore;
+            else
+            return team2.homeTeam - team1.homeTeam;
+          }
+
+          const sortedOriginalList = [];
+          miniLeaderList.map((team) =>{
+            sortedOriginalList.push({country: team.country, ...dataMap[team.country]})
+          })
+          scoreMap[points] = sortedOriginalList;
     }
-    this.leaderBoardList = leaderList;
-    console.log("leaderList",leaderList)
+    })
+    const scoreMappedSortedList = [];
+    Object.keys(scoreMap).map((points)=>{
+      scoreMappedSortedList.push({points: points, teams: scoreMap[points] })
+    })
+
+    scoreMappedSortedList.sort((team1, team2) => team2.points - team1.points);
+    const sortedFinalLeaderList = [];
+    scoreMappedSortedList.map((item) => {
+      sortedFinalLeaderList.push(...item.teams)
+    });
+    // console.log("finaList", sortedFinalLeaderList)
+    this.leaderBoardList = sortedFinalLeaderList;
   }
 })

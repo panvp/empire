@@ -8,7 +8,7 @@ const matchList1 =  [
          matchDate: 1651744128685, 
          stadium: "Maracanã", 
          homeTeam: "Brazil", 
-         awayTeam: "Argentina", 
+         awayTeam: "Serbia", 
          matchPlayed: true, 
          homeTeamScore: 0, 
          awayTeamScore: 0 
@@ -17,19 +17,46 @@ const matchList1 =  [
 	      matchDate: 1651844228685, 
          stadium: "Maracanã", 
          homeTeam: "Switzerland", 
-         awayTeam: "France", 
+         awayTeam: "Serbia", 
+         matchPlayed: true, 
+         homeTeamScore: 0, 
+         awayTeamScore: 2 
+	},
+  {
+	      matchDate: 1651844228685, 
+         stadium: "Maracanã", 
+         homeTeam: "Serbia", 
+         awayTeam: "Cameroon", 
+         matchPlayed: true, 
+         homeTeamScore: 1, 
+         awayTeamScore: 1 
+	},
+  {
+	      matchDate: 1661744228685, 
+         stadium: "Maracanã", 
+         homeTeam: "Brazil", 
+         awayTeam: "Switzerland", 
+         matchPlayed: true, 
+         homeTeamScore: 3, 
+         awayTeamScore: 2
+	},
+  {
+	      matchDate: 1651844228685, 
+         stadium: "Maracanã", 
+         homeTeam: "Brazil", 
+         awayTeam: "Cameroon", 
          matchPlayed: true, 
          homeTeamScore: 0, 
          awayTeamScore: 0 
 	},
   {
-	      matchDate: 1661744228685, 
+	      matchDate: 1651844228685, 
          stadium: "Maracanã", 
-         homeTeam: "Democratic Republic Of Congo", 
-         awayTeam: "Guinea-bissau", 
+         homeTeam: "Switzerland", 
+         awayTeam: "Cameroon", 
          matchPlayed: true, 
-         homeTeamScore: 12345, 
-         awayTeamScore: 0 
+         homeTeamScore: 0, 
+         awayTeamScore: 0
 	}  
    ];
    
@@ -75,7 +102,7 @@ function leaderBoardLinkClickHandler() {
 }
 .footer{
   background-color: #F6F7F7;
-  position: absolute;
+  position: sticky;
   bottom: 0;
   height: 40px;
   width: 100%;
