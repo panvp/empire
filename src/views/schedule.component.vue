@@ -1,41 +1,8 @@
 <script setup>
 import { ref } from 'vue';
-const props = defineProps({
-  name: String
-})
-var d = new Date(1382086394000);
-console.log(d.getDate(),".",d.getMonth()+1,".",d.getFullYear(),"time",d.getHours(),":",d.getMinutes())
-const matchList =  [ 
-      { 
-         matchDate: 1651744228685, 
-         stadium: "Maracanã", 
-         homeTeam: "Brazil", 
-         awayTeam: "Argentina", 
-         matchPlayed: true, 
-         homeTeamScore: 0, 
-         awayTeamScore: 0 
-      }, 
-      {
-	      matchDate: 1651744228685, 
-         stadium: "Maracanã", 
-         homeTeam: "Switzerland", 
-         awayTeam: "France", 
-         matchPlayed: true, 
-         homeTeamScore: 0, 
-         awayTeamScore: 0 
-	},
-  {
-	      matchDate: 1651744228685, 
-         stadium: "Maracanã", 
-         homeTeam: "Democratic Republic Of Congo", 
-         awayTeam: "Guinea-bissau", 
-         matchPlayed: true, 
-         homeTeamScore: 12345, 
-         awayTeamScore: 0 
-	}  
-   ] 
+import { store } from '../stores/store'; 
 
-const data = ref("Hello World1");
+
 const isTablet = ref(true);
 const isMobile = ref(true);
 window.onresize = function(){
@@ -55,7 +22,7 @@ window.onresize = function(){
   isMobile.value = false;
 
 }
-console.log("Tablet",isTablet.value,"mobile",isMobile.value)
+console.log(store.matchList, "matchlist")
 </script>
 
 <template>
@@ -68,8 +35,11 @@ console.log("Tablet",isTablet.value,"mobile",isMobile.value)
             <div class="headingItem"></div>
             <div class="headingItem">Away Team</div>
     </div>
-    <div :class="(index %2) ? 'tableContent even' : 'tableContent'" v-for="(item, index) in matchList">
-      <div v-if="isMobile" class="rowItem firstItem">{{ item.matchDate }}</div>
+    <div :class="(index %2) ? 'tableContent even' : 'tableContent'" v-for="(item, index) in store.matchList">
+      <div v-if="isMobile" class="rowItem firstItem time">
+        <div> {{ item.date }}</div>
+        <div> {{ item.time }}</div>
+      </div>
       <div v-if="isTablet" class="rowItem">{{ item.stadium }}</div>
       <div class="rowItem">
           <div class="homeTeam">
@@ -107,6 +77,9 @@ console.log("Tablet",isTablet.value,"mobile",isMobile.value)
 }
 .firstItem{
   padding-left: 2vw;
+}
+.time{
+  /* text-align: right; */
 }
 .homeTeam{
   display: flex;

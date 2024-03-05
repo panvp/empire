@@ -1,6 +1,46 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HomeView from './views/HomeView.vue';
+import { RouterView } from 'vue-router'
+import router from './router'
+import { store } from './stores/store'; 
+
+const matchList1 =  [ 
+      { 
+         matchDate: 1651744128685, 
+         stadium: "Maracanã", 
+         homeTeam: "Brazil", 
+         awayTeam: "Argentina", 
+         matchPlayed: true, 
+         homeTeamScore: 0, 
+         awayTeamScore: 0 
+      }, 
+      {
+	      matchDate: 1651844228685, 
+         stadium: "Maracanã", 
+         homeTeam: "Switzerland", 
+         awayTeam: "France", 
+         matchPlayed: true, 
+         homeTeamScore: 0, 
+         awayTeamScore: 0 
+	},
+  {
+	      matchDate: 1661744228685, 
+         stadium: "Maracanã", 
+         homeTeam: "Democratic Republic Of Congo", 
+         awayTeam: "Guinea-bissau", 
+         matchPlayed: true, 
+         homeTeamScore: 12345, 
+         awayTeamScore: 0 
+	}  
+   ];
+   
+store.getInitialData(matchList1);
+
+function scheduleLinkClickHandler() {
+  router.push('/schedule')
+}
+function leaderBoardLinkClickHandler() {
+  router.push('/leaderboard')
+}
 </script>
 
 <template>
@@ -9,11 +49,12 @@ import HomeView from './views/HomeView.vue';
       League Web UI
     </div>
     <div class="navLinks">
-        <div class="scheduleLink"> Schedule</div>
-        <div> Leaderboard</div>
+        <div @click="scheduleLinkClickHandler" class="scheduleLink"> Schedule</div>
+        <div @click="leaderBoardLinkClickHandler" class="leaderBoardLink"> Leaderboard</div>
     </div>
   </div>
-  <HomeView/>
+
+    <router-view/>
 
   <div class="footer">
     <div class="footerItem">
@@ -50,10 +91,14 @@ import HomeView from './views/HomeView.vue';
 }
 .scheduleLink{
   margin-right: 40px;
+  cursor: pointer;
+}
+.leaderBoardLink{
+  cursor: pointer;
 }
 .footerItem{
   padding-right : 40px;
 }
 
 </style>
-
+./views/S.vue
